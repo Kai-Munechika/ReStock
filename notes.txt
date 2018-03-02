@@ -84,6 +84,7 @@ What I want to do:
 
         Filter out companies that have 'Financial Services' for sector
             ~/COMPANY
+            associate industry and sector with each ticker
 
         Collect finances needed to rank
             ~/FINANCIALS

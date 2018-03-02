@@ -38,11 +38,9 @@ def insert_market_caps(company_data, minimum_market_cap):
 
 
 # ~/company
-def insert_sectors_and_industries(company_data, sectors_to_exclude=frozenset(), industries_to_exclude=frozenset()):
+def insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude):
     # input company_data : Dictionary[symbol: Dictionary['name' : company_name, 'market_cap' : market_cap]]
-    # for each company in company_data:
-    #   Dictionary['name' : company_name, 'market_cap' : market_cap]]
-    #     -> Dictionary['name' : company_name, 'market_cap' : market_cap, 'sector' : sector, 'industry' : industry]]
+    # inserts sector and industry for each company in company_data
     # also removes companies that have sector in sectors_to_exclude or industry in industries_to_exclude
 
     def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
@@ -57,6 +55,18 @@ def insert_sectors_and_industries(company_data, sectors_to_exclude=frozenset(), 
                 del _company_data[company_symbol]
 
     batch(company_data=company_data, batch_url_type='company', func_for_each_batch=process_batch)
+
+
+# todo
+# ~/financials
+def insert_financials(company_data):
+    # inserts ROC, Earnings Yield, EBIT, totalAssets, totalDebt, and currentCash for each company in company data
+
+    def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
+        for company_symbol in current_batch_symbols_list:
+            
+
+    batch(company_data=company_data, batch_url_type='financials', func_for_each_batch=process_batch)
 
 
 # Helper function for every time we need to make > 100 API calls
