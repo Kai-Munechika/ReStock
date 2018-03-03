@@ -12,14 +12,14 @@ def get_active_symbols_and_names():
 
     symbols_dict = {}
     for _dict in data_as_list_of_dicts:
-        if _dict['isEnabled'] and _dict['symbol'].isalnum():
+        if _dict['isEnabled'] and _dict['symbol'].isalnum() and _dict['type'] == 'cs':
             symbols_dict[_dict['symbol']] = {'name': _dict['name']}
 
     return symbols_dict
 
 
 # ~/quote
-def insert_market_caps(company_data, minimum_market_cap):
+def insert_market_caps_and_pe(company_data, minimum_market_cap):
     # input company_data : Dictionary[symbol: Dictionary['name' : company_name]]
     # for each company in company_data:
     #      Dictionary['name' : company_name] -> Dictionary['name' : company_name, 'market_cap' : market_cap]
@@ -29,8 +29,10 @@ def insert_market_caps(company_data, minimum_market_cap):
         for company_symbol in current_batch_symbols_list:
             quote_dict = data_as_dict[company_symbol]['quote']
             market_cap = quote_dict['marketCap']
-            if market_cap and market_cap > minimum_market_cap:
+            pe_ratio = quote_dict['peRatio']
+            if market_cap and market_cap > minimum_market_cap and pe_ratio and pe_ratio > 0:
                 _company_data[company_symbol]['market_cap'] = market_cap
+                _company_data[company_symbol]['pe_ratio'] = pe_ratio
             else:
                 del _company_data[company_symbol]
 
@@ -57,16 +59,53 @@ def insert_sectors_and_industries(company_data, sectors_to_exclude, industries_t
     batch(company_data=company_data, batch_url_type='company', func_for_each_batch=process_batch)
 
 
-# todo
 # ~/financials
+# Note: this calculates financials solely on 1 quarter, figuring out how to calculate them over the
+# previous year (4 quarters) is out of my space at the moment
 def insert_financials(company_data):
     # inserts ROC, Earnings Yield, EBIT, totalAssets, totalDebt, and currentCash for each company in company data
 
     def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
         for company_symbol in current_batch_symbols_list:
-            
+            financials_dict = data_as_dict[company_symbol]['financials']['financials']    # last quarter available
+
+            EBIT = financials_dict['operatingIncome']
+            total_assets = financials_dict['totalAssets']
+            total_debt = financials_dict['totalDebt'] if financials_dict['totalDebt'] else 0
+            current_cash = financials_dict['currentCash']
+
+            if not EBIT or EBIT <= 0 or not total_assets or not current_cash:
+                # around 200 companies are further filtered out here;
+                # most of them are related to foreign companies or mutual funds
+                del _company_data[company_symbol]
+            else:
+                _company_data[company_symbol]['EBIT'] = EBIT
+                _company_data[company_symbol]['total_assets'] = total_assets
+                _company_data[company_symbol]['total_debt'] = total_debt
+                _company_data[company_symbol]['current_cash'] = current_cash
+
+                market_cap = _company_data[company_symbol]['market_cap']
+                net_debt = total_debt - current_cash
+
+                _company_data[company_symbol]['earnings_yield'] = EBIT / (market_cap + net_debt)
+                _company_data[company_symbol]['return_on_capital'] = EBIT / total_assets
 
     batch(company_data=company_data, batch_url_type='financials', func_for_each_batch=process_batch)
+
+
+# ~/stats
+def insert_ROA(company_data, minimum_percent=0):
+
+    def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
+        for company_symbol in current_batch_symbols_list:
+            stats_dict = data_as_dict[company_symbol]['stats']
+            ROA = stats_dict['returnOnAssets']
+            if ROA and ROA > minimum_percent:
+                _company_data[company_symbol]['ROA'] = ROA
+            else:
+                del _company_data[company_symbol]
+
+    batch(company_data=company_data, batch_url_type='stats', func_for_each_batch=process_batch)
 
 
 # Helper function for every time we need to make > 100 API calls
@@ -92,13 +131,13 @@ def refresh_data():
     company_data = get_active_symbols_and_names()
 
     print('Active symbols and names:')
-    print(company_data)
+    # print(company_data)
     print('Size = {}'.format(len(company_data)))
     print()
 
     # filter out companies that have < $50 million market capitalization
     minimum = 50_000_000
-    insert_market_caps(company_data, minimum)
+    insert_market_caps_and_pe(company_data, minimum)
 
     print('With market caps and after removing those with < {}'.format(minimum))
     print(company_data)
@@ -108,11 +147,18 @@ def refresh_data():
     # # filter out companies that have 'financial services' for sector
     # note: some companies have null sector and/or industry, these are typically foreign securities or mutual funds
     sectors_to_exclude = frozenset({'Financial Services', ''})
-    industries_to_exclude = frozenset({''})
+    industries_to_exclude = frozenset({'REITs'})
 
     insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude)
 
-    print('With sectors and industries, and after removing those with "financial services" sector')
+    print('With sectors and industries, and after removing those with "financial services" sector and "REITs" industry')
+    print(company_data)
+    print('Size = {}'.format(len(company_data)))
+    print()
+
+    # include ROA
+    insert_ROA(company_data)
+    print('With ROA, after removing those with a null or < x value')
     print(company_data)
     print('Size = {}'.format(len(company_data)))
     print()
