@@ -1,6 +1,8 @@
 import requests
 import json
-
+from operator import itemgetter
+from queue import PriorityQueue
+from pymongo import MongoClient
 
 # ~/symbols
 def get_active_symbols_and_names():
@@ -59,40 +61,6 @@ def insert_sectors_and_industries(company_data, sectors_to_exclude, industries_t
     batch(company_data=company_data, batch_url_type='company', func_for_each_batch=process_batch)
 
 
-# ~/financials
-# Note: this calculates financials solely on 1 quarter, figuring out how to calculate them over the
-# previous year (4 quarters) is out of my space at the moment
-def insert_financials(company_data):
-    # inserts ROC, Earnings Yield, EBIT, totalAssets, totalDebt, and currentCash for each company in company data
-
-    def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
-        for company_symbol in current_batch_symbols_list:
-            financials_dict = data_as_dict[company_symbol]['financials']['financials']    # last quarter available
-
-            EBIT = financials_dict['operatingIncome']
-            total_assets = financials_dict['totalAssets']
-            total_debt = financials_dict['totalDebt'] if financials_dict['totalDebt'] else 0
-            current_cash = financials_dict['currentCash']
-
-            if not EBIT or EBIT <= 0 or not total_assets or not current_cash:
-                # around 200 companies are further filtered out here;
-                # most of them are related to foreign companies or mutual funds
-                del _company_data[company_symbol]
-            else:
-                _company_data[company_symbol]['EBIT'] = EBIT
-                _company_data[company_symbol]['total_assets'] = total_assets
-                _company_data[company_symbol]['total_debt'] = total_debt
-                _company_data[company_symbol]['current_cash'] = current_cash
-
-                market_cap = _company_data[company_symbol]['market_cap']
-                net_debt = total_debt - current_cash
-
-                _company_data[company_symbol]['earnings_yield'] = EBIT / (market_cap + net_debt)
-                _company_data[company_symbol]['return_on_capital'] = EBIT / total_assets
-
-    batch(company_data=company_data, batch_url_type='financials', func_for_each_batch=process_batch)
-
-
 # ~/stats
 def insert_ROA(company_data, minimum_percent=0):
 
@@ -127,7 +95,43 @@ def batch(company_data, batch_url_type, func_for_each_batch):
         func_for_each_batch(company_data, data_as_dict, current_batch_symbols_list)
 
 
-def refresh_data():
+# at this point, company_data has everything we need to perform the ranking
+def rank_stocks(company_data):
+    companies = []  # List[Tuple(symbol, ROA, pe)]
+    for symbol in company_data.keys():
+        companies.append((symbol, company_data[symbol]['ROA'], company_data[symbol]['pe_ratio']))
+
+    ordered_by_roa = sorted(companies, key=itemgetter(1), reverse=True)     # higher the ROA, the better
+    ordered_by_pe = sorted(companies, key=itemgetter(2))                    # lower the p/e ratio, the better
+
+    print(ordered_by_roa)
+    print(ordered_by_pe)
+
+    # the lower the score, the better - e.g. a company with a score of 2 is better than a company with a score of 500
+    scores = {}
+    for i in range(len(ordered_by_roa)):
+        tup = ordered_by_roa[i]
+        company_symbol = tup[0]
+        scores[company_symbol] = i
+
+    for i in range(len(ordered_by_pe)):
+        tup = ordered_by_pe[i]
+        company_symbol = tup[0]
+        scores[company_symbol] += i
+
+    ranking = PriorityQueue()
+    for company_symbol in scores:
+        ranking.put((scores[company_symbol], company_symbol))
+
+    current_rank = 1
+    while ranking.qsize() > 0:
+        score, company_symbol = ranking.get()
+        company_data[company_symbol]['score'] = score
+        company_data[company_symbol]['rank'] = current_rank
+        current_rank += 1
+
+
+def update_db():
     company_data = get_active_symbols_and_names()
 
     print('Active symbols and names:')
@@ -140,7 +144,7 @@ def refresh_data():
     insert_market_caps_and_pe(company_data, minimum)
 
     print('With market caps and after removing those with < {}'.format(minimum))
-    print(company_data)
+    # print(company_data)
     print('Size = {}'.format(len(company_data)))
     print()
 
@@ -152,7 +156,7 @@ def refresh_data():
     insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude)
 
     print('With sectors and industries, and after removing those with "financial services" sector and "REITs" industry')
-    print(company_data)
+    # print(company_data)
     print('Size = {}'.format(len(company_data)))
     print()
 
@@ -163,5 +167,12 @@ def refresh_data():
     print('Size = {}'.format(len(company_data)))
     print()
 
+    # and finally:
+    rank_stocks(company_data)
+    print(company_data)
 
-refresh_data()
+    # client = MongoClient()
+
+
+if __name__ == "__main__":
+    update_db()
