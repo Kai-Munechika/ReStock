@@ -3,6 +3,10 @@ import json
 from operator import itemgetter
 from queue import PriorityQueue
 from pymongo import MongoClient
+from robinhood_api import get_pe_and_market_cap
+
+USE_ROBINHOOD_API = True    # need to check legality of using this API, note: using let's us rank ~200 more stocks
+DROP_DB = True
 
 # ~/symbols
 def get_active_symbols_and_names():
@@ -32,7 +36,17 @@ def insert_market_caps_and_pe(company_data, minimum_market_cap):
             quote_dict = data_as_dict[company_symbol]['quote']
             market_cap = quote_dict['marketCap']
             pe_ratio = quote_dict['peRatio']
-            if market_cap and market_cap > minimum_market_cap and pe_ratio and pe_ratio > 0:
+
+            if USE_ROBINHOOD_API and (not pe_ratio or not market_cap):
+                print("robinhood call", company_symbol)
+                t = get_pe_and_market_cap(company_symbol)
+                if t:
+                    if not pe_ratio:
+                        pe_ratio = t[0]
+                    if not market_cap:
+                        market_cap = t[1]
+
+            if market_cap and market_cap > minimum_market_cap and pe_ratio and pe_ratio > 5:
                 _company_data[company_symbol]['market_cap'] = market_cap
                 _company_data[company_symbol]['pe_ratio'] = pe_ratio
             else:
@@ -63,7 +77,6 @@ def insert_sectors_and_industries(company_data, sectors_to_exclude, industries_t
 
 # ~/stats
 def insert_ROA(company_data, minimum_percent=0):
-
     def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
         for company_symbol in current_batch_symbols_list:
             stats_dict = data_as_dict[company_symbol]['stats']
@@ -84,10 +97,10 @@ def batch(company_data, batch_url_type, func_for_each_batch):
     while company_symbols_list:
         batch_size = 100 if len(company_symbols_list) >= 100 else len(company_symbols_list)
 
-        current_batch_symbols_list = company_symbols_list[:batch_size]       # take the first 100
-        company_symbols_list = company_symbols_list[batch_size:]             # trim off the current batch
+        current_batch_symbols_list = company_symbols_list[:batch_size]  # take the first 100
+        company_symbols_list = company_symbols_list[batch_size:]  # trim off the current batch
 
-        comma_separated_symbols = ','.join(current_batch_symbols_list)       # [sq,aapl] -> sq,aapl
+        comma_separated_symbols = ','.join(current_batch_symbols_list)  # [sq,aapl] -> sq,aapl
 
         json_data = requests.get(url=base_url + comma_separated_symbols)
         data_as_dict = json.loads(json_data.text)
@@ -101,8 +114,8 @@ def rank_stocks(company_data):
     for symbol in company_data.keys():
         companies.append((symbol, company_data[symbol]['ROA'], company_data[symbol]['pe_ratio']))
 
-    ordered_by_roa = sorted(companies, key=itemgetter(1), reverse=True)     # higher the ROA, the better
-    ordered_by_pe = sorted(companies, key=itemgetter(2))                    # lower the p/e ratio, the better
+    ordered_by_roa = sorted(companies, key=itemgetter(1), reverse=True)  # higher the ROA, the better
+    ordered_by_pe = sorted(companies, key=itemgetter(2))  # lower the p/e ratio, the better
 
     print(ordered_by_roa)
     print(ordered_by_pe)
@@ -131,24 +144,14 @@ def rank_stocks(company_data):
         current_rank += 1
 
 
-def update_db():
+def get_comprehensive_company_data():
     company_data = get_active_symbols_and_names()
 
     print('Active symbols and names:')
-    # print(company_data)
     print('Size = {}'.format(len(company_data)))
     print()
 
-    # filter out companies that have < $50 million market capitalization
-    minimum = 50_000_000
-    insert_market_caps_and_pe(company_data, minimum)
-
-    print('With market caps and after removing those with < {}'.format(minimum))
-    # print(company_data)
-    print('Size = {}'.format(len(company_data)))
-    print()
-
-    # # filter out companies that have 'financial services' for sector
+    # filter out companies
     # note: some companies have null sector and/or industry, these are typically foreign securities or mutual funds
     sectors_to_exclude = frozenset({'Financial Services', ''})
     industries_to_exclude = frozenset({'REITs'})
@@ -156,14 +159,20 @@ def update_db():
     insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude)
 
     print('With sectors and industries, and after removing those with "financial services" sector and "REITs" industry')
-    # print(company_data)
     print('Size = {}'.format(len(company_data)))
     print()
 
-    # include ROA
+    # insert ROA and filter out companies with low or invalid ROA
     insert_ROA(company_data)
     print('With ROA, after removing those with a null or < x value')
-    print(company_data)
+    print('Size = {}'.format(len(company_data)))
+    print()
+
+    # filter out companies that have < $50 million market capitalization or < 5 P/E ratio
+    minimum = 50_000_000
+    insert_market_caps_and_pe(company_data, minimum)
+
+    print('With market caps and after removing those with < {} and < 5 P/E ratio'.format(minimum))
     print('Size = {}'.format(len(company_data)))
     print()
 
@@ -171,8 +180,35 @@ def update_db():
     rank_stocks(company_data)
     print(company_data)
 
-    # client = MongoClient()
+    return company_data
+
+
+def update_db(company_data):
+    """
+    :param company_data: Dictionary{str company_symbol : Dictionary{string metric : value} }
+    :return: None
+    """
+    print()
+    print(data)
+
+    client = MongoClient()
+    db = client['ReStocked']
+    companies_collection = db.companies
+
+    if DROP_DB:
+        companies_collection.drop()
+
+    for company_symbol in company_data:
+        data[company_symbol]['_id'] = company_symbol
+        companies_collection.update_one(
+            {
+                '_id': company_symbol
+            },
+            {
+                '$set': data[company_symbol]
+            }, upsert=True)     # upsert=True --> if the document does not exist in the collection, add it
 
 
 if __name__ == "__main__":
-    update_db()
+    data = get_comprehensive_company_data()
+    update_db(data)

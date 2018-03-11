@@ -7,6 +7,7 @@ def get_financials(ticker):
     as_dict = json.loads(r.text)
     return as_dict
 
+print(get_financials('BPT'))
 
 def get_all_sectors_and_industries(tickers):
     '''
