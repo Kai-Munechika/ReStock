@@ -7,7 +7,6 @@ def get_financials(ticker):
     as_dict = json.loads(r.text)
     return as_dict
 
-print(get_financials('BPT'))
 
 def get_all_sectors_and_industries(tickers):
     '''
@@ -16,7 +15,7 @@ def get_all_sectors_and_industries(tickers):
     '''
 
     base_url = 'https://api.iextrading.com/1.0/stock/market/batch?types=company&symbols=s'
-    output = {}     # Dict<sector, {set of industries}>
+    output = {}  # Dict<sector, {set of industries}>
 
     while tickers:
         batch_size = 100 if len(tickers) >= 100 else len(tickers)
@@ -42,23 +41,41 @@ def get_all_sectors_and_industries(tickers):
 
     return output
 
-'''
-All sectors -> industries:
 
-output on 3/2/2018:
-{
-'Basic Materials': {'Chemicals', 'Steel', 'Agriculture', 'Forest Products', 'Coal', 'Metals & Mining', 'Building Materials'},
-'Financial Services': {'Insurance', 'Banks', 'Insurance - Life', 'Insurance - Property & Casualty', 'Brokers & Exchanges', 'Credit Services', 'Asset Management', 'Insurance - Specialty'},
-'Healthcare': {'Health Care Providers', 'Medical Diagnostics & Research', 'Medical Distribution', 'Biotechnology', 'Medical Devices', 'Medical Instruments & Equipment', 'Health Care Plans', 'Drug Manufacturers'},
-'': {''},
-'Industrials': {'Business Services', 'Farm & Construction Machinery', 'Airlines', 'Employment Services', 'Waste Management', 'Industrial Distribution', 'Industrial Products', 'Consulting & Outsourcing', 'Conglomerates', 'Aerospace & Defense', 'Transportation & Logistics', 'Engineering & Construction', 'Truck Manufacturing'},
-'Technology': {'Computer Hardware', 'Application Software', 'Semiconductors', 'Communication Equipment', 'Online Media'},
-'Consumer Cyclical': {'Publishing', 'Packaging & Containers', 'Entertainment', 'Personal Services', 'Advertising & Marketing Services', 'Restaurants', 'Travel & Leisure', 'Homebuilding & Construction', 'Autos', 'Manufacturing - Apparel & Furniture', 'Retail - Apparel & Specialty'},
-'Real Estate': {'REITs', 'Real Estate Services'},
-'Energy': {'Oil & Gas - E&P', 'Oil & Gas - Midstream', 'Oil & Gas - Services', 'Oil & Gas - Integrated', 'Oil & Gas - Drilling', 'Oil & Gas - Refining & Marketing'},
-'Consumer Defensive': {'Tobacco Products', 'Retail - Defensive', 'Education', 'Consumer Packaged Goods', 'Beverages - Non-Alcoholic', 'Beverages - Alcoholic'},
-None: {None},
-'Utilities': {'Utilities - Regulated', 'Utilities - Independent Power Producers'},
-'Communication Services': {'Communication Services'}
+sectors_to_industries = {
+    'Basic Materials': {'Chemicals', 'Steel', 'Agriculture', 'Forest Products', 'Coal', 'Metals & Mining',
+                        'Building Materials'},
+
+    'Financial Services': {'Insurance', 'Banks', 'Insurance - Life', 'Insurance - Property & Casualty',
+                           'Brokers & Exchanges', 'Credit Services', 'Asset Management', 'Insurance - Specialty'},
+
+    'Healthcare': {'Health Care Providers', 'Medical Diagnostics & Research', 'Medical Distribution', 'Biotechnology',
+                   'Medical Devices', 'Medical Instruments & Equipment', 'Health Care Plans', 'Drug Manufacturers'},
+    '': {''},
+
+    'Industrials': {'Business Services', 'Farm & Construction Machinery', 'Airlines', 'Employment Services',
+                    'Waste Management', 'Industrial Distribution', 'Industrial Products', 'Consulting & Outsourcing',
+                    'Conglomerates', 'Aerospace & Defense', 'Transportation & Logistics', 'Engineering & Construction',
+                    'Truck Manufacturing'},
+
+    'Technology': {'Computer Hardware', 'Application Software', 'Semiconductors', 'Communication Equipment',
+                   'Online Media'},
+
+    'Consumer Cyclical': {'Publishing', 'Packaging & Containers', 'Entertainment', 'Personal Services',
+                          'Advertising & Marketing Services', 'Restaurants', 'Travel & Leisure',
+                          'Homebuilding & Construction', 'Autos', 'Manufacturing - Apparel & Furniture',
+                          'Retail - Apparel & Specialty'},
+
+    'Real Estate': {'REITs', 'Real Estate Services'},
+
+    'Energy': {'Oil & Gas - E&P', 'Oil & Gas - Midstream', 'Oil & Gas - Services', 'Oil & Gas - Integrated',
+               'Oil & Gas - Drilling', 'Oil & Gas - Refining & Marketing'},
+
+    'Consumer Defensive': {'Tobacco Products', 'Retail - Defensive', 'Education', 'Consumer Packaged Goods',
+                           'Beverages - Non-Alcoholic', 'Beverages - Alcoholic'},
+    None: {None},
+
+    'Utilities': {'Utilities - Regulated', 'Utilities - Independent Power Producers'},
+
+    'Communication Services': {'Communication Services'}
 }
-'''

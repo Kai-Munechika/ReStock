@@ -1,4 +1,4 @@
-from pymongo import MongoClient, DESCENDING
+from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client['ReStocked']
 companies = db.companies
@@ -28,13 +28,12 @@ def get_top_n_ranked_companies(n):
     cursor = companies.find({'rank': {'$lte': n}}).sort('rank')
     return cursor_results_to_list(cursor)
 
-#
-# def get_top_n_companies_by_metric(n, metric_name, metric_value, sort_metric_name, descending=False):
-#     cursor = companies.find({metric_name: metric_value}).sort(sort_metric_name)
-#     if descending:
-#         cursor = cursor.sort(sort_metric_name, DESCENDING)
-#     cursor = cursor.limit(n)
-#     return cursor_results_to_list(cursor)
+
+# We want to filter the companies by some discrete attribute/metric: e.g. industry, sector
+# and want to sort the results by some numerical value: e.g. ROA, P/E ratio, or rank, descending or ascending
+def get_top_n_companies_filtered(n, filter_attribute, filter_value, sort_attribute, order=ASCENDING):
+    cursor = companies.find({filter_attribute: filter_value}).sort(sort_attribute, order).limit(n)
+    return cursor_results_to_list(cursor)
 
 
 def cursor_results_to_list(cursor):

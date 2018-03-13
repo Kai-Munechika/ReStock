@@ -8,6 +8,7 @@ from robinhood_api import get_pe_and_market_cap
 USE_ROBINHOOD_API = True    # need to check legality of using this API, note: using let's us rank ~200 more stocks
 DROP_DB = True
 
+
 # ~/symbols
 def get_active_symbols_and_names():
     # returns all companies that are active have an alphanumeric symbol
@@ -36,6 +37,7 @@ def insert_market_caps_and_pe(company_data, minimum_market_cap):
             quote_dict = data_as_dict[company_symbol]['quote']
             market_cap = quote_dict['marketCap']
             pe_ratio = quote_dict['peRatio']
+            current_price = quote_dict['latestPrice']
 
             if USE_ROBINHOOD_API and (not pe_ratio or not market_cap):
                 print("robinhood call", company_symbol)
@@ -49,6 +51,7 @@ def insert_market_caps_and_pe(company_data, minimum_market_cap):
             if market_cap and market_cap > minimum_market_cap and pe_ratio and pe_ratio > 5:
                 _company_data[company_symbol]['market_cap'] = market_cap
                 _company_data[company_symbol]['pe_ratio'] = pe_ratio
+                _company_data[company_symbol]['price'] = current_price
             else:
                 del _company_data[company_symbol]
 
@@ -154,7 +157,7 @@ def get_comprehensive_company_data():
     # filter out companies
     # note: some companies have null sector and/or industry, these are typically foreign securities or mutual funds
     sectors_to_exclude = frozenset({'Financial Services', ''})
-    industries_to_exclude = frozenset({'REITs'})
+    industries_to_exclude = frozenset({''})     # take a look at REITs
 
     insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude)
 
