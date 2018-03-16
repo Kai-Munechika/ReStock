@@ -1,13 +1,20 @@
 from flask import Flask, render_template, redirect, jsonify
 from mongo_util import *
+from meta import sectors_to_industries
+
 app = Flask(__name__)
 
 
+# Note: this endpoint just checks that we can successfully pass data to some html template; Helen will work on the front-end templates
 @app.route('/')
 @app.route('/<name>')
 def hello_world(name='World'):
-    return render_template('hello.html', name=name)
+    sort_keys = {'ROA', 'pe_ratio', 'rank'}
+    return render_template('index.html', sectors_to_industries=sectors_to_industries, sort_keys=sort_keys)
 
+
+
+# APIs
 
 @app.route('/api/rank')
 @app.route('/api/rank/<int:n>')

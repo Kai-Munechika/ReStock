@@ -46,12 +46,8 @@ sectors_to_industries = {
     'Basic Materials': {'Chemicals', 'Steel', 'Agriculture', 'Forest Products', 'Coal', 'Metals & Mining',
                         'Building Materials'},
 
-    'Financial Services': {'Insurance', 'Banks', 'Insurance - Life', 'Insurance - Property & Casualty',
-                           'Brokers & Exchanges', 'Credit Services', 'Asset Management', 'Insurance - Specialty'},
-
     'Healthcare': {'Health Care Providers', 'Medical Diagnostics & Research', 'Medical Distribution', 'Biotechnology',
                    'Medical Devices', 'Medical Instruments & Equipment', 'Health Care Plans', 'Drug Manufacturers'},
-    '': {''},
 
     'Industrials': {'Business Services', 'Farm & Construction Machinery', 'Airlines', 'Employment Services',
                     'Waste Management', 'Industrial Distribution', 'Industrial Products', 'Consulting & Outsourcing',
@@ -73,9 +69,17 @@ sectors_to_industries = {
 
     'Consumer Defensive': {'Tobacco Products', 'Retail - Defensive', 'Education', 'Consumer Packaged Goods',
                            'Beverages - Non-Alcoholic', 'Beverages - Alcoholic'},
-    None: {None},
 
     'Utilities': {'Utilities - Regulated', 'Utilities - Independent Power Producers'},
 
     'Communication Services': {'Communication Services'}
 }
+
+# Excluded:
+# '': {''},
+# 'Financial Services': {'Insurance', 'Banks', 'Insurance - Life', 'Insurance - Property & Casualty',
+#                           'Brokers & Exchanges', 'Credit Services', 'Asset Management', 'Insurance - Specialty'},
+# None: {None},
+#
+
+
