@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Hello {{ name }}!</h1>
+
+    <button id="all">All</button>
+
+    <br>
+    <br>
+
+    {% for sector in sectors_to_industries %}
+    <button class="sector">{{sector}}</button>
+    <br>
+        {% for industry in sectors_to_industries[sector] %}
+            <button class="industry">{{industry}}</button>
+        {% endfor %}
+    <br>
+    <br>
+    {% endfor %}
+
+    {% for sort_key in sort_keys %}
+    <button>{{sort_key}}</button>
+    {% endfor %}
+
+
+    <ol>
+
+    </ol>
+
+</body>
+</html>
