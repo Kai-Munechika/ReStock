@@ -31,6 +31,8 @@ def get_top_n_ranked_companies(n):
 
 # We want to filter the companies by some discrete attribute/metric: e.g. industry, sector
 # and want to sort the results by some numerical value: e.g. ROA, P/E ratio, or rank, descending or ascending
+
+# for now, sort by (n=10, filter_attribute = sector, filter_value = user selected sector, sort_attribute = rank, order = ASCENDING)
 def get_top_n_companies_filtered(n, filter_attribute, filter_value, sort_attribute, order=ASCENDING):
     cursor = companies.find({filter_attribute: filter_value}).sort(sort_attribute, order).limit(n)
     return cursor_results_to_list(cursor)
