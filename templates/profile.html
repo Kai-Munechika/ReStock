@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+
+
+</head>
+<body>
+
+
+<div id="container" style="width:100%; height:400px;"></div>
+
+<script>
+
+    var chart1; // globally available
+
+    $(function () {
+        chart1 = Highcharts.stockChart('container', {
+            rangeSelector: {
+                allButtonsEnabled: true,
+                selected: 0,
+                inputEnabled: false
+            },
+            title: {
+                text: '{{ symbol }} Stock Price'
+            },
+            xAxis: {
+                labels: {
+                    formatter: function() {
+                        var label = this.axis.defaultLabelFormatter.call(this);
+                        if (label.includes('.')) {
+                            var t = label.replace('.', '');
+
+                            // split on white space
+                            t = t.split(/(\s+)/).filter( function(e) { return e.trim().length > 0; } );
+                            return t[1] + " " + t[0]
+                        }
+                        return label;
+                    }
+                }
+            },
+
+            series: [{
+                name: '{{ symbol }}',
+                type: 'area',
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                threshold: null,
+                data: {{ data }}
+            }],
+
+            tooltip: {
+                valueDecimals: 2
+            },
+
+            scrollbar: {
+                enabled: false
+            },
+
+            navigator: {
+                enabled: false
+            },
+
+            credits: {
+                enabled: false
+            }
+
+        });
+    });
+
+</script>
+
+</body>
+</html>
