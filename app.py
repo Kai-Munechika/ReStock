@@ -1,10 +1,9 @@
 from flask import Flask, render_template, redirect, jsonify
 from mongo_util import *
 from meta import sectors_to_industries
-from historical_data import HistoricalData
 
 app = Flask(__name__)
-historical_data_client = HistoricalData("IEX", True)
+
 
 # Note: this endpoint just checks that we can successfully pass data to some html template; Helen will work on the front-end templates
 @app.route('/')
@@ -13,11 +12,6 @@ def hello_world(name='World'):
     sort_keys = {'ROA', 'pe_ratio', 'rank'}
     return render_template('index.html', sectors_to_industries=sectors_to_industries, sort_keys=sort_keys)
 
-
-@app.route('/profile/<string:symbol>')
-def profile(symbol):
-    data = historical_data_client.get_historical_data(symbol)
-    return render_template('profile.html', data=data, symbol=symbol.upper())
 
 
 # APIs
