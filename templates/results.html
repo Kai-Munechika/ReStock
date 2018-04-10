@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:900|Lora|PT+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='materialize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body style="background-color: #0ca759;">
+
+<div class="row" style="color:white; text-align: center">
+    <h2>Our Top Recommendations</h2>
+    <h5>based on your search for {{ sector }} + ${{ budget }}</h5>
+</div>
+<div class="row">
+    {# Form where user will input sector and budget #}
+    <form action="{{ url_for('handleData') }}" method="POST" id="user_search">
+        <div class="row white z-depth-3" style=" margin-top: 1%; max-width:80%;">
+
+            <div class="input-field col s5">
+                <select name="sector">
+                    <option value="" disabled selected>Pick a sector</option>
+                    <option value="Any">Any</option>
+                    {% for sector in sectors_to_industries %}
+                        <option value={{ sector }}>{{ sector }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col s4">
+                <h4 style="font-weight: bold; float: left;">$</h4>
+                <input type="text" name="budget" placeholder="Your budget"
+                       style="margin-left:.4em;margin-top: .7em; font-size: 1.5em; width: 90%;" class="white">
+            </div>
+            <div class="col s3" style="margin-top: 1%;">
+                <a class="waves-effect waves-light btn-large" id="pressed_search" style="margin-left: 5%;"><i
+                        class="material-icons right">search</i>New Search</a>
+            </div>
+
+        </div>
+{#        <div class="row" style="text-align:center; padding:1em;">#}
+{#            <a class="waves-effect waves-light btn-large" id="pressed_search"><i class="material-icons right">search</i>Find#}
+{#                Companies</a>#}
+{##}
+{#        </div>#}
+    </form>
+</div>
+{% for company in companies %}
+    <div class="row">
+        <div class="col s10 offset-s1">
+            <a href="http://127.0.0.1:5000/profile/{{ company['_id'] }}" style="color: black">
+                <div class="card horizontal z-depth-3">
+                    <div class="card-image">
+                        <img src="https://www.freelogodesign.org/img/logo-ex-1.png" class="circle responsive-img">
+                    </div>
+                    <div class="card-stacked">
+
+                        <div class="card-content">
+
+                            <h4>{{ company['name'] }} <span style="color: #0ca759">|</span> <span
+                                    style="font-weight: 200; font-family: 'PT Sans', sans-serif">{{ company['industry'] }}</span>
+                            </h4>
+
+                            <div class="row" style="text-align: center">
+                                <div class="col s2"><label style="font-size:1.1em;">Stock Price</label><h4
+                                        style="margin-top: .2em; background: #0ca759;color: white;padding: .25em;border-radius:8px; font-size: 2.2em">
+                                    ${{ company['price'] }}</h4></div>
+                                <div class="col s2"><label style="font-size:.96em;">Peformance Rating</label><i
+                                        class="medium material-icons dp48">sentiment_very_satisfied</i></div>
+                                {#            <div id="price_box" class="col s2" style="float: left;color:#09e376;"><i class=" medium material-icons dp48">attach_money</i> <h4 style="float: right; margin-top: .1em;"> {{ company['price'] }}</h4></div>#}
+                                <div class="col s3"><label style="font-size:1.1em;">Future Profit Potential</label><h4
+                                        style="margin-top: .2em;">HIGH</h4></div>
+                                <div class="col s5"><label style="font-size:1.1em;">Why we think this company is
+                                    good</label>
+                                    <p style="text-align: left">Bacon ipsum dolor amet ribeye turkey cow rump capicola
+                                        swine chicken frankfurter. Pancetta sirloin salami andouille, leberkas fatback
+                                        boudin drumstick corned beef beef ribs bacon t-bone ground round tri-tip.</p>
+                                </div>
+                            </div>
+                        </div>
+                        {#        <div class="card-action">#}
+                        {#          <a href="#">This is a link</a>#}
+                        {#        </div>#}
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endfor %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>
