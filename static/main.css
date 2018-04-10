@@ -1,19 +1,37 @@
 
 
 
-h1, h2, h3{
+h1, h2, h3, h4{
     font-family: 'Lato', sans-serif;
 }
 
-p, blockquote, h4, h5, button, a{
+p, blockquote, h5, button, a{
     font-family: 'PT Sans', sans-serif;
 }
 
-a#search_button{
+
+a#pressed_search{
     background:#ff6f00;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: bold;
 }
 
 blockquote#blockquote_green{
     background: #09e376;
     border-left: 5px solid #09e376;
+}
+
+body{
+    background-color: #09e376;
+}
+
+span.card-title-h{
+    font-family: 'Lato', sans-serif !important;
+    text-align: center;
+    font-size:1.2em;
+}
+
+div#price_box.col.s3{
+    background: #09e376;
+    color: white;
 }

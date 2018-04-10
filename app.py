@@ -1,7 +1,10 @@
-from flask import Flask, render_template, redirect, jsonify
+from flask import Flask, render_template, redirect, jsonify, request
+import requests
 from mongo_util import *
 from meta import sectors_to_industries
 from historical_data import HistoricalData
+import sys
+import json
 
 app = Flask(__name__)
 historical_data_client = HistoricalData("IEX", True)
@@ -12,6 +15,22 @@ historical_data_client = HistoricalData("IEX", True)
 def hello_world(name='World'):
     sort_keys = {'ROA', 'pe_ratio', 'rank'}
     return render_template('index.html', sectors_to_industries=sectors_to_industries, sort_keys=sort_keys)
+
+
+# takes in user input from the landing page (sector & budget)
+@app.route('/handleData', methods=['POST'])
+def handleData():
+    # for now, sort by (n=10, filter_attribute = sector, filter_value = user selected sector, sort_attribute = rank, order = ASCENDING)
+
+    sector = request.form['sector']
+    budget = request.form['budget']
+    n = 10
+    filter_attribute = 'sector'
+    filter_value = sector
+    sort_attribute = 'rank'
+    order = 'ASCENDING'
+    data = json.loads(filter_and_sort(n,filter_attribute,filter_value,sort_attribute,order).data)
+    return render_template('results.html', companies=data, budget=budget,sector=filter_value, sectors_to_industries=sectors_to_industries)
 
 
 @app.route('/profile/<string:symbol>')
@@ -46,3 +65,4 @@ def filter_and_sort(n, filter_attribute, filter_value, sort_attribute, order):
 
 if __name__ == '__main__':
     app.run(debug=True)
+

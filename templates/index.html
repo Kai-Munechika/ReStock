@@ -21,29 +21,34 @@ background-size: cover;">
         <h1>Find the right investing opportunities for you.</h1>
         <h5>ReStock gives you personalized stock recommendations for free.</h5>
     </div>
-    <div class="row white z-depth-3" style=" margin-top: 7%; max-width:80%;">
-        <form action=""></form>
 
-        <div class="input-field col s6">
-            <select>
-                <option value="" disabled selected>Pick a sector</option>
-                <option value="Any">Any</option>
-                {% for sector in sectors_to_industries %}
-                    <option value={{ sector }}>{{ sector }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col s6">
-            <h4 style="font-weight: bold; float: left;">$</h4>
-            <input type="text" name="amount" placeholder="Your budget"
-                   style="margin-left:.4em;margin-top: .7em; font-size: 1.5em; width: 90%;" class="white">
-        </div>
-    </div>
-    <div class="row" style="text-align:center; padding:1em;">
-        <a class="waves-effect waves-light btn-large" id="search_button"><i class="material-icons right">search</i>Find
-            Companies</a>
+    {# Form where user will input sector and budget #}
+    <form action="{{ url_for('handleData') }}" method="POST" id="user_search">
+        <div class="row white z-depth-3" style=" margin-top: 7%; max-width:80%;">
 
-    </div>
+            <div class="input-field col s6">
+                <select name="sector">
+                    <option value="" disabled selected>Pick a sector</option>
+                    <option value="Any">Any</option>
+                    {% for sector in sectors_to_industries %}
+                        <option value={{ sector }}>{{ sector }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col s6">
+                <h4 style="font-weight: bold; float: left;">$</h4>
+                <input type="text" name="budget" placeholder="Your budget"
+                       style="margin-left:.4em;margin-top: .7em; font-size: 1.5em; width: 90%;" class="white">
+            </div>
+
+        </div>
+        <div class="row" style="text-align:center; padding:1em;">
+            <a class="waves-effect waves-light btn-large" id="pressed_search"><i class="material-icons right">search</i>Find
+                Companies</a>
+
+        </div>
+    </form>
+
 </div>
 
 
