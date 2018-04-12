@@ -5,7 +5,7 @@ from queue import PriorityQueue
 from pymongo import MongoClient
 from robinhood_api import get_pe_and_market_cap
 
-USE_ROBINHOOD_API = True    # need to check legality of using this API, note: using let's us rank ~200 more stocks
+USE_ROBINHOOD_API = False    # need to check legality of using this API, note: using let's us rank ~200 more stocks
 DROP_DB = True
 
 
@@ -92,6 +92,16 @@ def insert_ROA(company_data, minimum_percent=0):
     batch(company_data=company_data, batch_url_type='stats', func_for_each_batch=process_batch)
 
 
+# ~/logo
+def insert_logos(company_data):
+    def process_batch(_company_data, data_as_dict, current_batch_symbols_list):
+        for company_symbol in current_batch_symbols_list:
+            logo_url = data_as_dict[company_symbol]['logo']['url']
+            _company_data[company_symbol]['logo_url'] = logo_url
+
+    batch(company_data=company_data, batch_url_type='logo', func_for_each_batch=process_batch)
+
+
 # Helper function for every time we need to make > 100 API calls
 def batch(company_data, batch_url_type, func_for_each_batch):
     base_url = 'https://api.iextrading.com/1.0/stock/market/batch?types={}&symbols='.format(batch_url_type)
@@ -161,7 +171,7 @@ def get_comprehensive_company_data():
 
     insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude)
 
-    print('With sectors and industries, and after removing those with "financial services" sector and "REITs" industry')
+    print('With sectors and industries, and after removing those with "financial services" sector')
     print('Size = {}'.format(len(company_data)))
     print()
 
@@ -178,6 +188,9 @@ def get_comprehensive_company_data():
     print('With market caps and after removing those with < {} and < 5 P/E ratio'.format(minimum))
     print('Size = {}'.format(len(company_data)))
     print()
+
+    insert_logos(company_data)
+    print("logos inserted")
 
     # and finally:
     rank_stocks(company_data)

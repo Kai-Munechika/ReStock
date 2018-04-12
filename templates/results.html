@@ -52,7 +52,7 @@
             <a href="http://127.0.0.1:5000/profile/{{ company['_id'] }}" style="color: black">
                 <div class="card horizontal z-depth-3">
                     <div class="card-image">
-                        <img src="https://www.freelogodesign.org/img/logo-ex-1.png" class="circle responsive-img">
+                        <img src={{company["logo_url"]}} onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png';"class="circle responsive-img">
                     </div>
                     <div class="card-stacked">
 

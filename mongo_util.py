@@ -31,8 +31,17 @@ def get_top_n_ranked_companies(n):
 
 # We want to filter the companies by some discrete attribute/metric: e.g. industry, sector
 # and want to sort the results by some numerical value: e.g. ROA, P/E ratio, or rank, descending or ascending
-def get_top_n_companies_filtered(n, filter_attribute, filter_value, sort_attribute, order=ASCENDING):
-    cursor = companies.find({filter_attribute: filter_value}).sort(sort_attribute, order).limit(n)
+def get_top_n_companies_filtered(n, filter_attribute, filter_value, sort_attribute, order=ASCENDING, price_cap=1_000_000):
+    cursor = companies.find(
+            {
+                '$and':
+                    [
+                        {filter_attribute: filter_value},
+                        {'price': {'$lt': price_cap}}
+                    ]
+            }
+
+        ).sort(sort_attribute, order).limit(n)
     return cursor_results_to_list(cursor)
 
 
