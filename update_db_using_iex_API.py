@@ -59,7 +59,7 @@ def insert_market_caps_and_pe(company_data, minimum_market_cap):
 
 
 # ~/company
-def insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude):
+def insert_sectors_and_industries_and_description(company_data, sectors_to_exclude, industries_to_exclude):
     # input company_data : Dictionary[symbol: Dictionary['name' : company_name, 'market_cap' : market_cap]]
     # inserts sector and industry for each company in company_data
     # also removes companies that have sector in sectors_to_exclude or industry in industries_to_exclude
@@ -69,9 +69,11 @@ def insert_sectors_and_industries(company_data, sectors_to_exclude, industries_t
             company_dict = data_as_dict[company_symbol]['company']
             industry = company_dict['industry']
             sector = company_dict['sector']
+            description = company_dict['description']
             if sector not in sectors_to_exclude and industry not in industries_to_exclude:
                 _company_data[company_symbol]['sector'] = sector
                 _company_data[company_symbol]['industry'] = industry
+                _company_data[company_symbol]['description'] = description
             else:
                 del _company_data[company_symbol]
 
@@ -169,7 +171,7 @@ def get_comprehensive_company_data():
     sectors_to_exclude = frozenset({'Financial Services', ''})
     industries_to_exclude = frozenset({''})     # take a look at REITs
 
-    insert_sectors_and_industries(company_data, sectors_to_exclude, industries_to_exclude)
+    insert_sectors_and_industries_and_description(company_data, sectors_to_exclude, industries_to_exclude)
 
     print('With sectors and industries, and after removing those with "financial services" sector')
     print('Size = {}'.format(len(company_data)))

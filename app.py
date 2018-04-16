@@ -8,6 +8,7 @@ import json
 
 app = Flask(__name__)
 historical_data_client = HistoricalData("IEX", True)
+DATA_SOURCE = "IEX"
 
 # Note: this endpoint just checks that we can successfully pass data to some html template; Helen will work on the front-end templates
 @app.route('/')
@@ -65,6 +66,14 @@ def filter_and_sort(n, filter_attribute, filter_value, sort_attribute, order, pr
 
     return jsonify(get_top_n_companies_filtered(n, filter_attribute, filter_value, sort_attribute, order, price_cap))
 
+@app.route('/api/news/<string:symbol>')
+def get_press(symbol):
+    if DATA_SOURCE == 'IEX':
+        r = requests.get(url='https://api.iextrading.com/1.0/stock/{}/news'.format(symbol))
+        as_list_of_dicts = json.loads(r.text)
+        return jsonify(as_list_of_dicts)
+    else:
+        return None
 
 if __name__ == '__main__':
     app.run(debug=True)
