@@ -51,8 +51,8 @@
         <div class="col s10 offset-s1">
             <a href="http://127.0.0.1:5000/profile/{{ company['_id'] }}" style="color: black">
                 <div class="card horizontal z-depth-3">
-                    <div class="card-image">
-                        <img src={{company["logo_url"]}} onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png';"class="circle responsive-img">
+                    <div class="card-image" style="text-align: center">
+                        <img src={{company["logo_url"]}} id="company_logo" class="circle responsive-img" onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png'; this.id = 'default_company_logo'">
                     </div>
                     <div class="card-stacked">
 

@@ -3,23 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello</title>
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:900|Lora|PT+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='materialize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="http://code.highcharts.com/stock/highstock.js"></script>
 
 
 </head>
-<body>
+<body style="background-color: #0ca759;">
 
+<div class="container z-depth-3">
+    <div class="row" style="background: white;">
+        <div class="col s2">
+                                        <div class="card-image" style="text-align: center">
+                        <img src={{_company["logo_url"]}} id="company_logo" class="circle responsive-img" onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png'; this.id = 'default_company_logo'">
+                    </div>
+        </div>
 
-<div id="container" style="width:100%; height:400px;"></div>
+        <div class="col s4">
+            <h3>{{ _company['name'] }}</h3>
+        </div>
+        <div class="col s2">
+            <label>Industry</label>
+            <h5>{{ _company["industry"] }}</h5>
+        </div>
+                                <div class="col s2"><label style="font-size:1.1em;">Stock Price</label><h4
+                                        style="margin-top: .2em; background: #0ca759;color: white;padding: .25em;border-radius:8px; font-size: 2.2em">
+                                    ${{ _company['price'] }}</h4></div>
+    </div>
+    <div class="row" style="background: white;">
+        <div class="col s8" id="company_chart"></div>
+    </div>
+</div>
+
+{#<div id="company_chart" style="width:100%; height:400px;"></div>#}
 
 <script>
 
     var chart1; // globally available
 
     $(function () {
-        chart1 = Highcharts.stockChart('container', {
+        chart1 = Highcharts.stockChart('company_chart', {
             rangeSelector: {
                 allButtonsEnabled: true,
                 selected: 0,
@@ -28,6 +54,11 @@
             title: {
                 text: '{{ symbol }} Stock Price'
             },
+                plotOptions: {
+        series: {
+            lineColor: ' #0ca759'
+        }
+    },
             xAxis: {
                 labels: {
                     formatter: function() {
@@ -55,7 +86,7 @@
                         y2: 1
                     },
                     stops: [
-                        [0, Highcharts.getOptions().colors[0]],
+                        [0, Highcharts.getOptions().colors[2]],
                         [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
                     ]
                 },

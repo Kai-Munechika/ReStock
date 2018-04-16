@@ -36,7 +36,10 @@ def handleData():
 @app.route('/profile/<string:symbol>')
 def profile(symbol):
     data = historical_data_client.get_historical_data(symbol)
-    return render_template('profile.html', data=data, symbol=symbol.upper())
+    _company = json.loads(company(symbol).data)
+    print(_company, file=sys.stderr)
+    return render_template('profile.html', data=data, symbol=symbol.upper(), _company=_company)
+
 
 
 # APIs
