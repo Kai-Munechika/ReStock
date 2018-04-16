@@ -1,20 +1,22 @@
-import requests
 import json
+
+import requests
+
+from src.config import IEXAPI
 
 
 def get_financials(ticker):
-    r = requests.get(url='https://api.iextrading.com/1.0/stock/{}/financials'.format(ticker))
+    r = requests.get(url='{}/stock/{}/financials'.format(IEXAPI.URL, ticker))
     as_dict = json.loads(r.text)
     return as_dict
 
 
 def get_all_sectors_and_industries(tickers):
-    '''
+    """
     output as of 3/1/18
+    """
 
-    '''
-
-    base_url = 'https://api.iextrading.com/1.0/stock/market/batch?types=company&symbols=s'
+    base_url = '{}/stock/market/batch?types=company&symbols=s'.format(IEXAPI.URL)
     output = {}  # Dict<sector, {set of industries}>
 
     while tickers:
@@ -81,5 +83,3 @@ sectors_to_industries = {
 #                           'Brokers & Exchanges', 'Credit Services', 'Asset Management', 'Insurance - Specialty'},
 # None: {None},
 #
-
-

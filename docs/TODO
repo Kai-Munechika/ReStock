@@ -1,0 +1,18 @@
+List with suggestion of items that can be improved in a next version
+====================================================================
+
+1. form needs validation. currently if you select a sector and skip your budget field and click at Find Companies button
+   the app continues.
+
+2. ERROR page, if you shutdown your MongoDB or simulate an connectivity issue like blocking the MongoDB port and
+   hit the Find Companies button of home page you will see a ugly error "pymongo.errors.ServerSelectionTimeoutError
+   pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused"
+
+3. Database connection pool, to share DB connection instead of each call to create a new DB connection, optimizing DB
+   access and allowing your application to run with more users.
+
+4. Logging, I am missing the codes printing or logging. It is a good practice to make the application verbose
+   and control the level of it. Special when the application is running in a server or in production with a
+   high-availability configuration and not by $ python src/web/app.py you wont have access to stdout. During
+   troubleshooting is necessary to have access of logs with past data.
+

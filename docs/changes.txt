@@ -1,0 +1,57 @@
+Major changes
+==============
+
+1. Organized project package structure, see project_tree.txt
+
+2. Added instructions how to run MongoDB from docker container. Eduardo is working in add the ful stack to run
+   in the docker container, should be available soon.
+
+3. Implemented Databse Pool Manager src/db/mongo_util.py to share database sessions avoiding new session/client be
+   created by request.
+
+4. Integrated MakeFile with some tasks ot this project. It is not 100% yet the way I wanted but you can run and see
+   something like:
+
+    (venv) [ecerquei@dev ReStock]$ make
+    Please use  `make <target>\' where <target> is one of
+      --- setup ---
+      init              to initialize project, install pip packages and create virtualenv
+      --- doc ---
+      docs              to make documentation in the default format
+      clean-docs        to remove docs and doc build artifacts
+      --- code ---
+      codecheck         to run code check on the entire project
+      clean-cache       to clean pytest cache files
+      clean-all         to clean cache, pyc, logs and docs
+      clean-pyc         to delete all temporary artifacts
+      --- run tests ---
+      tests             run all tests
+      --- Database ---
+      db-import         database import
+      db-drop           database delete
+      --- Application ---
+      run-app           run Flask application
+
+
+5. Implemented Company entity using Object Oriented and moved to src/controller/Company.py
+
+6. Integrated Logging in the core Flask application, see src/web/app.py search by app.logger. It is saving to
+   restocked.log file but the application needs logging all over the codes in the tiers.
+
+    2018-04-15 21:16:14,277 - restocked - DEBUG - debug message - [in src/web/app.py:63]
+    2018-04-15 21:16:14,277 - restocked - INFO - info message - [in src/web/app.py:64]
+    2018-04-15 21:16:14,277 - restocked - WARNING - warn message - [in src/web/app.py:65]
+    2018-04-15 21:16:14,278 - restocked - ERROR - error message - [in src/web/app.py:66]
+    2018-04-15 21:16:14,278 - restocked - CRITICAL - critical message - [in src/web/app.py:67]
+    2018-04-15 21:16:14,708 - restocked - DEBUG - debug message - [in src/web/app.py:63]
+    2018-04-15 21:16:14,708 - restocked - INFO - info message - [in src/web/app.py:64]
+    2018-04-15 21:16:14,708 - restocked - WARNING - warn message - [in src/web/app.py:65]
+    2018-04-15 21:16:14,708 - restocked - ERROR - error message - [in src/web/app.py:66]
+    2018-04-15 21:16:14,708 - restocked - CRITICAL - critical message - [in src/web/app.py:67]
+
+
+7. Created some basic unit tests src/tests/ as a guide/example.
+
+8. Tested running the MongoDB in a docker container and connecting from my devel machine. I added a note about it
+   in the README.md file.
+

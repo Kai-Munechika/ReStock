@@ -1,10 +1,14 @@
-import requests, json
+import json
 import time
 
+import requests
 
-# We want historical data to be in the form List[List[epoch time (in milliseconds), stock price value]] for charting
+from src.config import IEXAPI
+
+
+# We want historical data to be in the form List[List[epoch time
+# (in milliseconds), stock price value]] for charting
 class HistoricalData:
-
     data_sources = {'IEX'}
 
     def __init__(self, data_source, epoch_as_ms):
@@ -18,11 +22,12 @@ class HistoricalData:
         :return: historical data
         """
         if self.data_source == 'IEX':
-            url = 'https://api.iextrading.com/1.0/stock/{}/chart/5y'.format(symbol)
+            url = '{}/stock/{}/chart/5y'.format(IEXAPI.URL, symbol)
             r = requests.get(url)
             as_list_of_dicts = json.loads(r.text)
 
-            historical_data = [[self.date_time_to_epoch(day['date']), day['close']] for day in as_list_of_dicts]
+            historical_data = [[self.date_time_to_epoch(day['date']),
+                                day['close']] for day in as_list_of_dicts]
             return historical_data
 
         else:
