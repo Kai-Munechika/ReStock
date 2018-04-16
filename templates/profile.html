@@ -14,31 +14,80 @@
 </head>
 <body style="background-color: #0ca759;">
 
-<div class="container z-depth-3">
-    <div class="row" style="background: white;">
-        <div class="col s2">
-                                        <div class="card-image" style="text-align: center">
-                        <img src={{_company["logo_url"]}} id="company_logo" class="circle responsive-img" onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png'; this.id = 'default_company_logo'">
+<div class="container">
+    <div class="row">
+        {#        <div class="col s12">#}
+        <h2 class="header" style="color:white">{{ _company['name'] }}</h2>
+        <div class="card horizontal z-depth-3">
+            <div class="card-image">
+                <img src={{ _company["logo_url"] }} id="company_logo" class="circle responsive-img"
+                     onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png'; this.id = 'default_company_logo'">
+            </div>
+            <div class="card-stacked">
+                <div class="card-content">
+                    <div class="col s6">
+                        <p>{{ _company['description'] }}</p>
                     </div>
+                    <div class="col s4">
+                        <label>Industry</label>
+                        <h4 style="margin-top:.2em;">{{ _company["industry"] }}</h4>
+                    </div>
+                    <div class="col s2" style="text-align: center"><label style="font-size:.75em;">Performance
+                        Rating</label>
+
+                        <i class="medium material-icons dp48" style="color: #0ca759; margin-top:.2em;">sentiment_very_satisfied</i>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#        </div>#}
+
+    </div>
+    <div class="row z-depth-3" style="background: white; text-align: center">
+        <div class="card" style="margin-bottom:0">
+            <div class="card-content" style="width:100%;">
+                <div class="col s3">
+{#                    <label>Price</label>#}
+                    <h4>${{ _company['price'] }}</h4>
+                </div>
+                <div class="col s3">
+{#                    <label>P/E Ratio</label>#}
+                    <h4>{{ _company['pe_ratio'] }}</h4>
+                </div>
+                <div class="col s3">
+{#                    <label>ROA</label>#}
+                    <h4>{{ _company['ROA'] }}</h4>
+                </div>
+                <div class="col s3">
+{#                    <label>Market Cap</label>#}
+                    <h4>{{ _company['market_cap'] }}</h4>
+                </div>
+            </div>
+            <div class="card-tabs">
+                <ul class="tabs tabs-fixed-width z-depth-1">
+                    <li class="tab"><a href="#test4">Price <i class="tiny material-icons dp48" style="color: #ff6f00; margin-top:.2em;">help</i></a></li>
+                    <li class="tab"><a class="active" href="#test5">P/E Ratio <i class="tiny material-icons dp48" style="color: #ff6f00; margin-top:.2em;">help</i></a></li>
+                    <li class="tab"><a href="#test6">ROA <i class="tiny material-icons dp48" style="color: #ff6f00; margin-top:.2em;">help</i></a></li>
+                    <li class="tab"><a href="#test7">Market Cap <i class="tiny material-icons dp48" style="color: #ff6f00; margin-top:.2em;">help</i></a></li>
+                </ul>
+            </div>
+            <div class="card-content grey lighten-4">
+                <div id="test4">This is the last traded price for one share of this stock ~20 minutes ago.</div>
+                <div id="test5">P/E stands for <strong> price of a share / the earnings </strong> of the company. As a stock owner, you are entitled to a cut of the company's profits (whether it's reinvested back into the company to grow it, or as a dividend payment to you). The higher the P/E ratio, the more you pay for your cut of the profits. <strong>A low P/E ratio is better and means you are paying less for more profit.</strong></div>
+                <div id="test6">ROA stands for <strong>Return On Assets</strong> and focuses on a company's ability to generate earnings (this is the return), given how much money they spend (on their assets). <strong>Higher ROA means the company is more efficient at spending money to make money.</strong></div>
+                <div id="test7">Market cap is the total value of all the shares sold at the current trading price.</div>
+            </div>
+
         </div>
 
-        <div class="col s4">
-            <h3>{{ _company['name'] }}</h3>
-        </div>
-        <div class="col s2">
-            <label>Industry</label>
-            <h5>{{ _company["industry"] }}</h5>
-        </div>
-                                <div class="col s2"><label style="font-size:1.1em;">Stock Price</label><h4
-                                        style="margin-top: .2em; background: #0ca759;color: white;padding: .25em;border-radius:8px; font-size: 2.2em">
-                                    ${{ _company['price'] }}</h4></div>
     </div>
-    <div class="row" style="background: white;">
-        <div class="col s8" id="company_chart"></div>
+
+    <div class="row z-depth-3" style="background: white;">
+        <div class="col s7" id="company_chart"></div>
     </div>
 </div>
 
-{#<div id="company_chart" style="width:100%; height:400px;"></div>#}
 
 <script>
 
@@ -54,20 +103,22 @@
             title: {
                 text: '{{ symbol }} Stock Price'
             },
-                plotOptions: {
-        series: {
-            lineColor: ' #0ca759'
-        }
-    },
+            plotOptions: {
+                series: {
+                    lineColor: ' #0ca759'
+                }
+            },
             xAxis: {
                 labels: {
-                    formatter: function() {
+                    formatter: function () {
                         var label = this.axis.defaultLabelFormatter.call(this);
                         if (label.includes('.')) {
                             var t = label.replace('.', '');
 
                             // split on white space
-                            t = t.split(/(\s+)/).filter( function(e) { return e.trim().length > 0; } );
+                            t = t.split(/(\s+)/).filter(function (e) {
+                                return e.trim().length > 0;
+                            });
                             return t[1] + " " + t[0]
                         }
                         return label;
@@ -115,5 +166,8 @@
 
 </script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
 </html>

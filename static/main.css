@@ -47,3 +47,16 @@ div#price_box.col.s3{
     margin: 0;
     width:80%;
 }
+
+.tab a, .tab a:hover{
+    color:#ff6f00 !important;
+}
+
+.tab a:focus{
+    background: rgba(255, 111, 0, .12) !important;
+}
+
+.tabs .indicator{
+    background: #ff6f00 !important;
+    height: 4px;
+}
