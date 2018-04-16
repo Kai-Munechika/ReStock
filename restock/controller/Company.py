@@ -1,5 +1,5 @@
-from src.config import DB
-from src.db.mongo_util import DBPoolManager
+from restock.config import DB
+from restock.db.mongo_util import DBPoolManager
 
 
 class Companies(object):

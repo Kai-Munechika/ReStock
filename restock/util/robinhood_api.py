@@ -1,8 +1,6 @@
 import json
-
 import requests
-
-from src.config import RobinHoodAPI
+from restock.config import RobinHoodAPI
 
 
 def get_pe_and_market_cap(symbol):

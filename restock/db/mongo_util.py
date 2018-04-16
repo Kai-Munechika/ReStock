@@ -1,6 +1,5 @@
 from pymongo import MongoClient, ASCENDING, DESCENDING
-
-from src.config import DB
+from restock.config import DB
 
 
 class DBPoolManager(object):

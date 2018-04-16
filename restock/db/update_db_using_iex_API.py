@@ -5,8 +5,8 @@ import requests
 from operator import itemgetter
 from pymongo import MongoClient
 
-from src.config import IEXAPI, DB
-from src.util.robinhood_api import get_pe_and_market_cap
+from restock.config import IEXAPI, DB
+from restock.util.robinhood_api import get_pe_and_market_cap
 
 # TODO: need to check legality of using this API,
 # note: using let's us rank ~200 more stocks

@@ -23,4 +23,3 @@ queuelib
 # tests framework modules
 pytest
 pytest-html
-

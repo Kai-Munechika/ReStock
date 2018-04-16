@@ -5,6 +5,7 @@ OK_COLOR    = \x1b[32;01m
 WARN_COLOR  = \x1b[50;01m
 ERROR_COLOR = \x1b[31;01m
 SHELL = bash
+PYTHONPATH=$(PWD)
 
 # Commands --------------------------------------------------------------------
 
@@ -75,14 +76,16 @@ tests:
 db-import:
 	@echo -e "$(WARN_COLOR)----Running DB data importer----$(NO_COLOR)"
 	@export PYTHONPATH=$PWD
-	@python src/db/update_db_using_iex_API.py
+	@python restock/db/update_db_using_iex_API.py
 
 db-drop:
 	@echo -e "$(WARN_COLOR)----Drop DB----$(NO_COLOR)"
-	@export PYTHONPATH=$PWD
-	@python src/db/delete_db.py
+	@export PYTHONPATH
+	@echo "set PYTHONPATH=$(PYTHONPATH)"
+	@python restock/db/delete_db.py
 
 run-app:
 	@echo -e "$(WARN_COLOR)----Running Flask application----$(NO_COLOR)"
-	@export PYTHONPATH=$PWD
-	@python src/web/app.py
+	@export PYTHONPATH
+	@echo "set PYTHONPATH=$(PYTHONPATH)"
+	@python restock/app.py

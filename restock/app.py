@@ -1,14 +1,13 @@
 import json
-import logging
 import logging.config
 
 from flask import Flask, render_template, jsonify, request
-
-from src.db.mongo_util import *
-from src.model.historical_data import HistoricalData
-from src.util.meta import sectors_to_industries
 from pymongo import ASCENDING, DESCENDING
-from src.controller.Company import Companies
+
+from restock.controller.Company import Companies
+from restock.model.historical_data import HistoricalData
+from restock.util.meta import sectors_to_industries
+
 
 class LoggerConfig:
     dictConfig = {
@@ -24,7 +23,7 @@ class LoggerConfig:
                 'level': 'DEBUG',
                 'formatter': 'standard',
                 'class': 'logging.handlers.RotatingFileHandler',
-                'filename': 'restocked.log',
+                'filename': 'restock.log',
                 'maxBytes': 5000000,
                 'backupCount': 10
             },
@@ -39,7 +38,7 @@ class LoggerConfig:
            },
         },
         'loggers': {
-            'restocked': {
+            'restock': {
                 'handlers': ['default'],
                 'level': 'DEBUG',
                 'propagate': True},
@@ -54,7 +53,7 @@ app = Flask(__name__)
 # 'always' (default), 'never',  'production', 'debug'
 app.config['LOGGER_HANDLER_POLICY'] = 'always'
 # define which logger to use for Flask
-app.config['LOGGER_NAME'] = 'restocked'
+app.config['LOGGER_NAME'] = 'restock'
 #  initialise logger
 app.logger
 logging.config.dictConfig(LoggerConfig.dictConfig)
@@ -112,12 +111,14 @@ def profile(symbol):
 @app.route('/api/rank')
 @app.route('/api/rank/<int:n>')
 def rank(n=50):
-    return jsonify(get_top_n_ranked_companies(n))
+    companies = Companies()
+    return jsonify(companies.get_top_n_ranked_companies(n))
 
 
 @app.route('/api/company/<string:_id>')
 def company(_id):
-    return jsonify(get_company(_id.upper()))
+    companies = Companies()
+    return jsonify(companies.get_company(_id.upper()))
 
 
 @app.route('/api/filter/<int:n>/<string:filter_attribute>/\
@@ -138,4 +139,4 @@ def filter_and_sort(n, filter_attribute, filter_value, sort_attribute, order):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

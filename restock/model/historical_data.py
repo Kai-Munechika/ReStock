@@ -1,9 +1,8 @@
 import json
 import time
-
 import requests
 
-from src.config import IEXAPI
+from restock.config import IEXAPI
 
 
 # We want historical data to be in the form List[List[epoch time

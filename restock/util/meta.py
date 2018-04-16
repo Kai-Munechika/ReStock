@@ -1,8 +1,6 @@
 import json
-
 import requests
-
-from src.config import IEXAPI
+from restock.config import IEXAPI
 
 
 def get_financials(ticker):
