@@ -33,4 +33,4 @@ class DBPoolManager(object):
             conn.drop_database(DB.DOC)
             print("DATABASE {} DELETED!".format(DB.DOC))
         except Exception as ex:
-            print(ex)
+            raise ex

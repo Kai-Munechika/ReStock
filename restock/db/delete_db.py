@@ -6,7 +6,6 @@ print("Dropping database")
 try:
     db_pool = DBPoolManager()
     db_pool.delete_database()
+    print("COMPLETE!")
 except Exception as ex:
     print(ex)
-
-print("COMPLETE!")

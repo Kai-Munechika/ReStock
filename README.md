@@ -55,16 +55,7 @@ To run steps below you need to have docker and docker-compose properly setup in 
     $ docker-compose up
 ```
 
-2. (Optional) Test database connectivity
-
-```
-    Open MongoDB Compass [ https://docs.mongodb.com/compass/master/install/ ] and
-    connect to host: 0.0.0.0 and port: 27017
-    or
-    $ pytest -s tests/db/
-```
-
-3. Import data to MongoDB
+2. Import data to MongoDB
 
 ```
     $ python restock/db/update_db_using_iex_API.py
@@ -72,6 +63,15 @@ To run steps below you need to have docker and docker-compose properly setup in 
     $ make init
     $ source venv/bin/activate
     $ make db-import
+```
+
+3. (Optional) Test database connectivity
+
+```
+    Open MongoDB Compass [ https://docs.mongodb.com/compass/master/install/ ] and
+    connect to host: 0.0.0.0 and port: 27017
+    or
+    $ pytest -s tests/db/
 ```
 
 4. Access restock application
