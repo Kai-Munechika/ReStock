@@ -62,3 +62,4 @@ else
 	log "ERROR" "could not install modules from $REQ_MODULES, exit 1"
 	exit 1
 fi
+$VENV_PATH/bin/pip install -e .
