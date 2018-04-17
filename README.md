@@ -25,6 +25,10 @@ Forks need to be authorized and PRs  submitted for code review.
 
 ## Prepare development machine to run ReStock
 
+**temporally edit your /etc/hosts adding line below, more info check restock/config.py**
+
+`0.0.0.0    mongodb`
+
 1. Start-up MongoDB service or docker container and make sure it is listening on port 27017. MongoDB Compass is optional
    but strongly recommended for better DB data management https://docs.mongodb.com/compass/master/install/
 
@@ -44,6 +48,11 @@ Forks need to be authorized and PRs  submitted for code review.
     `$ make run-app`
 
 ## Running Restock in docker container
+
+**temporally edit your /etc/hosts adding line below, more info check restock/config.py**
+
+`0.0.0.0    mongodb`
+
 
 To run steps below you need to have docker and docker-compose properly setup in your machine.
 
