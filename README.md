@@ -31,7 +31,7 @@ Forks need to be authorized and PRs  submitted for code review.
 2. create python virtual environment and install all modules listed in requirements.txt. For better alternative
    you can run the followed command to initialize this step:
 
-    ``$ make init`
+    `$ make init`
 
 3. Load your database executing the script src/db/update_db_using_iex_API.py
    As alternative for this step you can run:
@@ -88,22 +88,30 @@ when you want to run mongo-db in docker container and debug restock application 
 machine.
 
 Install and start docker service in your machine
+
+```
 Linux/Fedora: sudo systemctl docker start
 MacOS: https://docs.docker.com/docker-for-mac/install/
+```
 
 pull mongo container [ https://hub.docker.com/_/mongo/ ]
+
 `docker pull mongo`
 
 create/start mongo container for first time
+
 `docker run --name mongodb -p 27017:27017 -d mongo`
 
 stop mongo container
+
 `docker stop mongodb`
 
 start mongo
+
 `docker start mongodb`
 
 check container is running
+
 ```
 docker ps
 docker ps -a
