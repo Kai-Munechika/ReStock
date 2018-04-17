@@ -31,18 +31,17 @@ Forks need to be authorized and PRs  submitted for code review.
 2. create python virtual environment and install all modules listed in requirements.txt. For better alternative
    you can run the followed command to initialize this step:
 
-    $ make init
+    ``$ make init`
 
 3. Load your database executing the script src/db/update_db_using_iex_API.py
    As alternative for this step you can run:
 
-    $ make db-import
+    `$ make db-import`
 
 4. Start-up Flask application, restock/web/app.py and go to http://127.0.0.1:5000/
    As alternative for this step you can run:
 
-    $ make run-app
-
+    `$ make run-app`
 
 ## Running Restock in docker container
 
@@ -51,31 +50,35 @@ To run steps below you need to have docker and docker-compose properly setup in 
 
 1. Build and start restock
 
+```
     $ docker-compose build
     $ docker-compose up
-
+```
 
 2. (Optional) Test database connectivity
 
+```
     Open MongoDB Compass [ https://docs.mongodb.com/compass/master/install/ ] and
     connect to host: 0.0.0.0 and port: 27017
     or
     $ pytest -s tests/db/
-
+```
 
 3. Import data to MongoDB
 
+```
     $ python restock/db/update_db_using_iex_API.py
     or
     $ make init
     $ source venv/bin/activate
     $ make db-import
-
+```
 
 4. Access restock application
 
+```
     open in your browser: http://0.0.0.0:5000
-
+```
 
 ## Running MongoDB only in docker container and restock app locally
 
@@ -89,17 +92,19 @@ Linux/Fedora: sudo systemctl docker start
 MacOS: https://docs.docker.com/docker-for-mac/install/
 
 pull mongo container [ https://hub.docker.com/_/mongo/ ]
-docker pull mongo
+`docker pull mongo`
 
 create/start mongo container for first time
-docker run --name mongodb -p 27017:27017 -d mongo
+`docker run --name mongodb -p 27017:27017 -d mongo`
 
 stop mongo container
-docker stop mongodb
+`docker stop mongodb`
 
 start mongo
-docker start mongodb
+`docker start mongodb`
 
 check container is running
+```
 docker ps
 docker ps -a
+```
