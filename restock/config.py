@@ -2,9 +2,8 @@
 Configuration file
 """
 
-
 class DB(object):
-    URL = "mongodb://localhost:27017/"
+    URL = "mongodb://0.0.0.0:27017/"
     SELECT_TIMEOUT = 30
     CONN_TIMEOUT = 20000
     POOL_SIZE = 200

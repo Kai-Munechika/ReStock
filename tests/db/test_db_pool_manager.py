@@ -1,6 +1,6 @@
 import pytest
 from pymongo import MongoClient
-from src.db.mongo_util import DBPoolManager
+from restock.db.mongo_util import DBPoolManager
 
 """
 how to run: 

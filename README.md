@@ -1,4 +1,4 @@
-# ReStocked
+# ReStock
 
 Stock App for novice investors!
 
@@ -23,22 +23,66 @@ please follow github https://help.github.com/articles/creating-an-issue/
 ## How to contribute
 Forks need to be authorized and PRs  submitted for code review.
 
-## Prepare development machine to run ReStocked
+## Prepare development machine to run ReStock
 
 1. Start-up MongoDB service or docker container and make sure it is listening on port 27017. MongoDB Compass is optional
    but strongly recommended for better DB data management https://docs.mongodb.com/compass/master/install/
 
 2. create python virtual environment and install all modules listed in requirements.txt. For better alternative
-   you can run the followed command to initialize this step: $ make init
+   you can run the followed command to initialize this step:
+
+    $ make init
 
 3. Load your database executing the script src/db/update_db_using_iex_API.py
-   As alternative for this step you can run: $ make db-import
-
-4. Start-up Flask application, src/web/app.py and go to http://127.0.0.1:5000/
    As alternative for this step you can run:
 
+    $ make db-import
 
-## Running MongoDB in Docker container
+4. Start-up Flask application, restock/web/app.py and go to http://127.0.0.1:5000/
+   As alternative for this step you can run:
+
+    $ make run-app
+
+
+## Running Restock in docker container
+
+To run steps below you need to have docker and docker-compose properly setup in your machine.
+
+
+1. Build and start restock
+
+    $ docker-compose build
+    $ docker-compose up
+
+
+2. (Optional) Test database connectivity
+
+    Open MongoDB Compass [ https://docs.mongodb.com/compass/master/install/ ] and
+    connect to host: 0.0.0.0 and port: 27017
+    or
+    $ pytest -s tests/db/
+
+
+3. Import data to MongoDB
+
+    $ python restock/db/update_db_using_iex_API.py
+    or
+    $ make init
+    $ source venv/bin/activate
+    $ make db-import
+
+
+4. Access restock application
+
+    open in your browser: http://0.0.0.0:5000
+
+
+## Running MongoDB only in docker container and restock app locally
+
+If you are running docker-compose command as described above you can skip this step.
+It is only if you don't want to run restock-web and restock-db good for development and debug
+when you want to run mongo-db in docker container and debug restock application locally in your
+machine.
 
 Install and start docker service in your machine
 Linux/Fedora: sudo systemctl docker start

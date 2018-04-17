@@ -1,0 +1,20 @@
+#
+# Restock + MongoDB
+#
+# Build docker image:
+# docker-compose build
+#
+# Run container:
+# docker-compose up
+#
+# Reference:
+# https://docs.docker.com/compose/gettingstarted/#step-3-define-services-in-a-compose-file
+
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+     - "5000:5000"
+  mongo:
+    image: "mongo:latest"

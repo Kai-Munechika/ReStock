@@ -1,0 +1,32 @@
+#
+# Restock + MongoDB
+#
+# Build docker image:
+# docker-compose build
+#
+# Run container:
+# docker-compose up
+#
+# Reference:
+# https://docs.docker.com/compose/gettingstarted/#step-3-define-services-in-a-compose-file
+
+version: '3'
+services:
+  web:
+    container_name: restock-web
+    build: .
+    ports:
+     - "5000:5000"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+  mongodb:
+    container_name: restock-db
+    image: "mongo:latest"
+    ports:
+     - "27017:27017"
+    volumes:
+      - db-data:/data/db
+volumes:
+  db-data:

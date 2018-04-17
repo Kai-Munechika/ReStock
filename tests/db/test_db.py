@@ -1,7 +1,7 @@
 import pytest
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from src.config import DB
+from restock.config import DB
 
 """
 how to run: 
@@ -34,7 +34,7 @@ class TestDB(object):
         print(info)
 
     def test_db_get_companies(self):
-        """Get companies record from ReStocked DOC"""
+        """Get companies record from ReStock DOC"""
         client = MongoClient(DB.URL,
                              serverSelectionTimeoutMS=DB.SELECT_TIMEOUT,
                              connectTimeoutMS=DB.CONN_TIMEOUT)

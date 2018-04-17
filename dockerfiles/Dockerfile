@@ -2,10 +2,10 @@
 # restock:latest
 #
 # Build docker image:
-# docker build -t restock -f dockerfiles/single/Dockerfile .
+# docker build -t restock -f dockerfiles/Dockerfile .
 #
 # Run container:
-# docker run -it --name restock restock /bin/bash
+# docker run --name restock -p 5000:5000 -d restock
 # docker run --entrypoint /bin/bash -i -t restock
 #
 # Reference:

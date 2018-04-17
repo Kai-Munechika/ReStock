@@ -1,8 +1,8 @@
 import pytest
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from src.config import DB
-from src.controller.Company import Companies
+from restock.config import DB
+from restock.controller.Company import Companies
 
 """
 how to run: 
