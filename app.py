@@ -31,8 +31,33 @@ def handleData():
     sort_attribute = 'rank'
     order = 'ASCENDING'
     data = json.loads(filter_and_sort(n,filter_attribute,filter_value,sort_attribute,order,budget).data)
-    return render_template('results.html', companies=data, budget=budget,sector=filter_value, sectors_to_industries=sectors_to_industries)
+    return render_template('results.html', companies=data, budget=budget,sector=filter_value, sectors_to_industries=sectors_to_industries, radio_index=0)
 
+
+@app.route('/results/<sector>/<int:budget>/<sort_by>/<int:radio_index>', methods=['GET'])
+def results(sector, budget, sort_by, radio_index):
+    NUM_COMPANIES_TO_RETURN = 10
+
+    sort_attribute = ""
+    order = "DESCENDING"
+    if sort_by == "Rankings":
+        sort_attribute = "rank"
+        order = "ASCENDING"
+    elif sort_by ==  "Price (Ascending)":
+        sort_attribute = "price"
+        order = "ASCENDING"
+    elif sort_by ==  "Price (Descending)":
+        sort_attribute = "price"
+    elif sort_by == "Performance Rating":
+        sort_attribute = "ROA"
+    elif sort_by == "Future Profit Potential":
+        sort_attribute = "pe_ratio"
+        order = "ASCENDING"
+    else:
+        return "something went wrong"
+
+    data = json.loads(filter_and_sort(NUM_COMPANIES_TO_RETURN, 'sector', sector, sort_attribute, order, budget).data)
+    return render_template('results.html', companies=data, budget=budget,sector=sector, sectors_to_industries=sectors_to_industries, radio_index=radio_index)
 
 @app.route('/profile/<string:symbol>')
 def profile(symbol):

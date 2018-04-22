@@ -5,8 +5,11 @@
     <title>Title</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:900|Lora|PT+Sans" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='materialize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    <base href="http://127.0.0.1:5000/">
 </head>
 <body style="background-color: #0ca759;">
 
@@ -24,7 +27,7 @@
                     <option value="" disabled selected>Pick a sector</option>
                     <option value="Any">Any</option>
                     {% for sector in sectors_to_industries %}
-                        <option value={{ sector }}>{{ sector }}</option>
+                    <option value={{ sector }}>{{ sector }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -39,58 +42,125 @@
             </div>
 
         </div>
-{#        <div class="row" style="text-align:center; padding:1em;">#}
-{#            <a class="waves-effect waves-light btn-large" id="pressed_search"><i class="material-icons right">search</i>Find#}
-{#                Companies</a>#}
-{##}
-{#        </div>#}
     </form>
+
+    <!--Filter card-->
+    <div class="row white z-depth-3" style=" margin-top: 1%; max-width:80%;">
+        <span id="sort-by-span">Sort By</span>
+
+        <form action="#" id="filter-form" class="inline-elements">
+            <p class="inline-elements">
+                <label>
+                    <input class="with-gap" name="group1" type="radio" {% if radio_index == 0 %} checked {% endif %}/>
+                    <span>Rankings</span>
+                </label>
+            </p>
+            <p class="inline-elements">
+                <label>
+                    <input class="with-gap" name="group1" type="radio" {% if radio_index == 1 %} checked {% endif %}/>
+                    <span>Price (Ascending)</span>
+                </label>
+            </p>
+            <p class="inline-elements">
+                <label style="display: inline;">
+                    <input class="with-gap" name="group1" type="radio" {% if radio_index == 2 %} checked {% endif %}/>
+                    <span>Price (Descending)</span>
+                </label>
+            </p>
+            <p class="inline-elements">
+                <label>
+                    <input class="with-gap" name="group1" type="radio" {% if radio_index == 3 %} checked {% endif %}/>
+                    <span>Performance Rating</span>
+                </label>
+            </p>
+            <p class="inline-elements">
+                <label>
+                    <input class="with-gap" name="group1" type="radio" {% if radio_index == 4 %} checked {% endif %}/>
+                    <span>Future Profit Potential</span>
+                </label>
+            </p>
+        </form>
+    </div>
+
+
+
 </div>
+
 {% for company in companies %}
-    <div class="row">
-        <div class="col s10 offset-s1">
-            <a href="http://127.0.0.1:5000/profile/{{ company['_id'] }}" style="color: black">
-                <div class="card horizontal z-depth-3">
-                    <div class="card-image" style="text-align: center">
-                        <img src={{company["logo_url"]}} id="company_logo" class="circle responsive-img" onerror="if (this.src != '../static/logo-ex-1.png') this.src = '../static/logo-ex-1.png'; this.id = 'default_company_logo'">
-                    </div>
-                    <div class="card-stacked">
+<div class="row">
+    <div class="col s10 offset-s1">
+        <a href="http://127.0.0.1:5000/profile/{{ company['_id'] }}" style="color: black">
+            <div class="card horizontal z-depth-3">
+                <div class="card-image" style="text-align: center">
+                    <img src={{company["logo_url"]}} id="company_logo" class="circle responsive-img"
+                         onerror="if (this.src != 'static/logo-ex-1.png') this.src = '../static/logo-ex-1.png'; this.id = 'default_company_logo'">
+                </div>
+                <div class="card-stacked">
 
-                        <div class="card-content">
+                    <div class="card-content">
 
-                            <h4>{{ company['name'] }} <span style="color: #0ca759">|</span> <span
-                                    style="font-weight: 200; font-family: 'PT Sans', sans-serif">{{ company['industry'] }}</span>
-                            </h4>
+                        <h4>{{ company['name'] }} <span style="color: #0ca759">|</span> <span
+                                style="font-weight: 200; font-family: 'PT Sans', sans-serif">{{ company['industry'] }}</span>
+                        </h4>
 
-                            <div class="row" style="text-align: center">
-                                <div class="col s2"><label style="font-size:1.1em;">Stock Price</label><h4
-                                        style="margin-top: .2em; background: #0ca759;color: white;padding: .25em;border-radius:8px; font-size: 2.2em">
-                                    ${{ company['price'] }}</h4></div>
-                                <div class="col s2"><label style="font-size:.96em;">Peformance Rating</label><i
-                                        class="medium material-icons dp48">sentiment_very_satisfied</i></div>
-                                {#            <div id="price_box" class="col s2" style="float: left;color:#09e376;"><i class=" medium material-icons dp48">attach_money</i> <h4 style="float: right; margin-top: .1em;"> {{ company['price'] }}</h4></div>#}
-                                <div class="col s3"><label style="font-size:1.1em;">Future Profit Potential</label><h4
-                                        style="margin-top: .2em;">HIGH</h4></div>
-                                <div class="col s5"><label style="font-size:1.1em;">Why we think this company is
-                                    good</label>
-                                    <p style="text-align: left">Bacon ipsum dolor amet ribeye turkey cow rump capicola
-                                        swine chicken frankfurter. Pancetta sirloin salami andouille, leberkas fatback
-                                        boudin drumstick corned beef beef ribs bacon t-bone ground round tri-tip.</p>
-                                </div>
+                        <div class="row" style="text-align: center">
+                            <div class="col s2"><label style="font-size:1.1em;">Stock Price</label><h4
+                                    style="margin-top: .2em; background: #0ca759;color: white;padding: .25em;border-radius:8px; font-size: 2.2em">
+                                ${{ company['price'] }}</h4></div>
+                            <div class="col s2"><label style="font-size:.96em;">Peformance Rating</label><i
+                                    class="medium material-icons dp48">sentiment_very_satisfied</i></div>
+                            {#
+                            <div id="price_box" class="col s2" style="float: left;color:#09e376;"><i
+                                    class=" medium material-icons dp48">attach_money</i> <h4
+                                    style="float: right; margin-top: .1em;"> {{ company['price'] }}</h4></div>
+                            #}
+                            <div class="col s3"><label style="font-size:1.1em;">Future Profit Potential</label><h4
+                                    style="margin-top: .2em;">HIGH</h4></div>
+                            <div class="col s5"><label style="font-size:1.1em;">Why we think this company is
+                                good</label>
+                                <p style="text-align: left">Bacon ipsum dolor amet ribeye turkey cow rump capicola
+                                    swine chicken frankfurter. Pancetta sirloin salami andouille, leberkas fatback
+                                    boudin drumstick corned beef beef ribs bacon t-bone ground round tri-tip.</p>
                             </div>
                         </div>
-                        {#        <div class="card-action">#}
-                        {#          <a href="#">This is a link</a>#}
-                        {#        </div>#}
                     </div>
+                    {#
+                    <div class="card-action">#}
+                        {# <a href="#">This is a link</a>#}
+                        {#
+                    </div>
+                    #}
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
     </div>
+</div>
 {% endfor %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+<script>
+
+    var radioButtonIndexToLabel = {
+        0: "Rankings",
+        1: "Price (Ascending)",
+        2: "Price (Descending)",
+        3: "Performance Rating",
+        4: "Future Profit Potential"
+    };
+
+    var baseUrl = document.location.origin;
+
+    $(document).ready(function () {
+        $('input[type=radio]').click(function () {
+
+            var selectedIndex = $(":radio[name='group1']:checked").index(":radio[name='group1']");
+
+            window.location = "/results/" + "{{sector}}/" + "{{budget}}/"
+                + radioButtonIndexToLabel[selectedIndex] + "/" + selectedIndex;
+        });
+    });
+</script>
 </body>
 </html>

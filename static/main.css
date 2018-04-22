@@ -61,6 +61,7 @@ div#price_box.col.s3{
     height: 4px;
 }
 
+
 .press_card{
     margin-top: 1em;
 }
@@ -77,4 +78,17 @@ div#price_box.col.s3{
 text.highcharts-title, .highchart_title{
     font-size: 2.3em !important;
     font-family: "Lato", sans-serif !important;
+}
+
+
+.inline-elements {
+    display: inline-block;
+    clear: both;
+    float: none;
+    margin-right: 30px !important;
+}
+
+#sort-by-span {
+    margin-left: 8px;
+    margin-right: 20px;
 }
