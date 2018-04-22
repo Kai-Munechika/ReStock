@@ -38,8 +38,8 @@ def handleData():
 def profile(symbol):
     data = historical_data_client.get_historical_data(symbol)
     _company = json.loads(company(symbol).data)
-    print(_company, file=sys.stderr)
-    return render_template('profile.html', data=data, symbol=symbol.upper(), _company=_company)
+    press = json.loads(get_press(symbol).data)
+    return render_template('profile.html', data=data, symbol=symbol.upper(), _company=_company, press=press)
 
 
 

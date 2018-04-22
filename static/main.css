@@ -60,3 +60,21 @@ div#price_box.col.s3{
     background: #ff6f00 !important;
     height: 4px;
 }
+
+.press_card{
+    margin-top: 1em;
+}
+
+.card.white.press_card:hover{
+    background:rgba(12, 167, 89, .3)!important;
+}
+
+.card.white.press_card:hover a{
+    color: white !important;
+}
+
+
+text.highcharts-title, .highchart_title{
+    font-size: 2.3em !important;
+    font-family: "Lato", sans-serif !important;
+}
