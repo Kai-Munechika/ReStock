@@ -64,9 +64,20 @@ def profile(symbol):
     data = historical_data_client.get_historical_data(symbol)
     _company = json.loads(company(symbol).data)
     press = json.loads(get_press(symbol).data)
-    return render_template('profile.html', data=data, symbol=symbol.upper(), _company=_company, press=press)
+    market_cap = format_market_cap(_company['market_cap'])
+    return render_template('profile.html', data=data, symbol=symbol.upper(), _company=_company, press=press, market_cap=market_cap)
 
 
+# src: https://stackoverflow.com/questions/579310/formatting-long-numbers-as-strings-in-python
+def format_market_cap(market_cap):
+    if not market_cap:
+        return "N/A"
+    magnitude = 0
+    while abs(market_cap) >= 1000:
+        magnitude += 1
+        market_cap /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (market_cap, ['', 'K', 'M', 'B', 'T', 'P'][magnitude])
 
 # APIs
 
