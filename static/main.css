@@ -37,15 +37,14 @@ div#price_box.col.s3{
 }
 
 #company_logo.circle.responsive-img{
-    width:85%;
-    margin: 1em;
-    margin-top:1em;
-    margin-right:3em;
+    width: 160px;
+    max-height: 260px;
+
 }
 
 #default_company_logo.circle.responsive-img{
-    margin: 0;
-    width:80%;
+    width: 160px;
+    max-height: 260px;
 }
 
 .tab a, .tab a:hover{
