@@ -25,7 +25,7 @@ def handleData():
 
     sector = request.form['sector']
     budget = int(request.form['budget'])
-    n = 10
+    n = 20
     filter_attribute = 'sector'
     filter_value = sector
     sort_attribute = 'rank'
@@ -36,7 +36,7 @@ def handleData():
 
 @app.route('/results/<sector>/<int:budget>/<sort_by>/<int:radio_index>', methods=['GET'])
 def results(sector, budget, sort_by, radio_index):
-    NUM_COMPANIES_TO_RETURN = 10
+    NUM_COMPANIES_TO_RETURN = 20
 
     sort_attribute = ""
     order = "DESCENDING"

@@ -107,15 +107,31 @@
                             <div class="col s2"><label style="font-size:1.1em;">Stock Price</label><h4
                                     style="margin-top: .2em; background: #0ca759;color: white;padding: .25em;border-radius:8px; font-size: 2.2em">
                                 ${{ company['price'] }}</h4></div>
-                            <div class="col s2"><label style="font-size:.96em;">Peformance Rating</label><i
-                                    class="medium material-icons dp48">sentiment_very_satisfied</i></div>
+                            <div class="col s2"><label style="font-size:.96em;">Peformance Rating</label>
+                                <i class="medium material-icons dp48">
+                                    {% if company['ROA'] < 5 %}
+                                        sentiment_neutral
+                                    {% elif company['ROA'] < 15 %}
+                                        sentiment_satisfied
+                                    {% else %}
+                                        sentiment_very_satisfied
+                                    {% endif %}
+                                </i>
+                            </div>
                             {#
                             <div id="price_box" class="col s2" style="float: left;color:#09e376;"><i
                                     class=" medium material-icons dp48">attach_money</i> <h4
                                     style="float: right; margin-top: .1em;"> {{ company['price'] }}</h4></div>
                             #}
                             <div class="col s3"><label style="font-size:1.1em;">Future Profit Potential</label><h4
-                                    style="margin-top: .2em;">HIGH</h4></div>
+                                    style="margin-top: .2em;">
+                                {% if company['pe_ratio'] < 15 %}
+                                    HIGH
+                                {% else %}
+                                    MEDIUM
+                                {% endif %}
+
+                            </h4></div>
                             <div class="col s5"><label style="font-size:1.1em;">Company Bio</label>
                                 <p style="text-align: left">{{company['description']}}</p>
                             </div>
